@@ -25,7 +25,7 @@ public class Unit : MonoBehaviour
         Health -= damage;
         if (Health <= 0)
             Die();
-        Debug.Log($"{Name} recieved {damage}. Health: {Health}");
+        Debug.Log($"{Name} recieved {damage} damege. Health: {Health}");
              
     }
     public virtual void Die(){

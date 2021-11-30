@@ -13,6 +13,8 @@ public class Character : Unit
     
     [SerializeField]
     private int _damage = 1;
+    [SerializeField]
+    private Bullet projectile;
     private SpriteRenderer sprite;
     private Animator animator;
 
@@ -49,6 +51,9 @@ public class Character : Unit
         if (isGrounded) state = CharState.Idle;
 
         checkGround();   
+
+        if(Input.GetMouseButtonDown(1))
+            shoot();    
 
         if(Input.GetMouseButtonDown(0))
             Attack();
@@ -95,7 +100,14 @@ public class Character : Unit
     }
 
     private void shoot(){
-        
+        Vector3 position = transform.position;
+        position.y += 1.0F;
+        position.x += 0.7F * (sprite.flipX ? -1.0F : 1.0F);
+
+        Bullet NewProj = Instantiate(projectile, position, projectile.transform.rotation) as Bullet;
+
+        NewProj.Direction = NewProj.transform.right * (sprite.flipX ? -1.0F : 1.0F);
+        NewProj.Parent = gameObject;
     }
 
 }
