@@ -6,6 +6,10 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField]
     private float speed = 10.0f;
+    [SerializeField]
+    private int damage = 1;
+
+    public int Damage {set {damage = value;} get {return damage;}}
 
     private SpriteRenderer sprite;
     private Vector3 direction;
@@ -33,7 +37,7 @@ public class Bullet : MonoBehaviour
        
        if (unit && unit.gameObject != parent) {
            Destroy(gameObject);
-           unit.recieveDamage(1);
+           unit.recieveDamage(damage);
        }
     }
 

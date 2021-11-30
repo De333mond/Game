@@ -8,6 +8,11 @@ public class Monster : Unit
     private int _health = 1;
     [SerializeField]
     private int _damage = 1;
+    [SerializeField]
+    private bool isMoveable = false;
+    [SerializeField]
+    private float speed = 3.0F;
+    
     
 
     // Start is called before the first frame update

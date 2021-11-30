@@ -10,15 +10,17 @@ public class Character : Unit
     private float jumpForce = 3.0F;
     [SerializeField]
     private int _health = 5;
-    
     [SerializeField]
     private int _damage = 1;
+    [SerializeField]
+    private int _fireballDamage = 1;
     [SerializeField]
     private Bullet projectile;
     private SpriteRenderer sprite;
     private Animator animator;
-
-    
+    public Transform attackpoint;
+    [SerializeField]
+    private float attackRange = 1.0F;
     
 
     new private Rigidbody2D rigidbody;
@@ -37,14 +39,14 @@ public class Character : Unit
     {
         Health = _health;
         Damage = _damage;
-        Name = "Char";
+        Name = "Character";
     }
 
     private void Awake() {
         rigidbody = GetComponent<Rigidbody2D>();
         sprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponent<Animator>();
-
+        
     }
     void Update()
     {
@@ -97,6 +99,16 @@ public class Character : Unit
     private void Attack()
     {
         state = CharState.Attack;
+
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackpoint.position, attackRange);
+
+        foreach (Collider2D enemy in hitEnemies) {
+            Unit unit = enemy.GetComponentInParent<Unit>();
+            if (unit && !(unit is Character))
+            {
+                unit.recieveDamage(Damage);
+            }
+        }
     }
 
     private void shoot(){
@@ -108,6 +120,9 @@ public class Character : Unit
 
         NewProj.Direction = NewProj.transform.right * (sprite.flipX ? -1.0F : 1.0F);
         NewProj.Parent = gameObject;
+        NewProj.Damage = _fireballDamage;
     }
+
+
 
 }
