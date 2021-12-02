@@ -6,13 +6,13 @@ public class Unit : MonoBehaviour
 {
     protected int Health;
     protected int Damage;
-    
     protected string Name;
+    // protected Animator _animator;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        // animator = gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -26,7 +26,7 @@ public class Unit : MonoBehaviour
         if (Health <= 0)
             Die();
         Debug.Log($"{Name} recieved {damage} damege. Health: {Health}");
-             
+        
     }
     public virtual void Die(){
         Destroy(gameObject);

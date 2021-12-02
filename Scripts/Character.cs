@@ -16,16 +16,22 @@ public class Character : Unit
     private int _fireballDamage = 1;
     [SerializeField]
     private Bullet projectile;
+    [SerializeField]
+    private float attackRange = 1.0F;
+    [SerializeField]
+    private float attackspeed = 0;
     private SpriteRenderer sprite;
     private Animator animator;
     public Transform attackpoint;
-    [SerializeField]
-    private float attackRange = 1.0F;
+    private string currentAnimation;
     
 
     new private Rigidbody2D rigidbody;
+    
     private bool isGrounded;
-
+    private bool isAttacking;
+    private bool isAttackPressed;
+    
     private enum CharState {
         Idle, Run, Jump, Attack
     }
@@ -34,6 +40,16 @@ public class Character : Unit
         get {return (CharState)animator.GetInteger("state");}
         set {animator.SetInteger("state", (int)value);}
     }
+
+    const string PLAYER_IDLE = "idle";
+    const string PLAYER_RUN = "run";
+    const string PLAYER_ATTACK = "attack";
+    const string PLAYER_JUMP = "jump";
+    const string PLAYER_HURT = "hurt";
+    
+
+
+
 
     void Start()
     {
@@ -50,33 +66,62 @@ public class Character : Unit
     }
     void Update()
     {
-        if (isGrounded) state = CharState.Idle;
 
-        checkGround();   
-
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(1) && !isAttacking){
             shoot();    
-
-        if(Input.GetMouseButtonDown(0))
+        }
+        
+        if(Input.GetMouseButtonDown(0) && !isAttacking){
             Attack();
-        else if (Input.GetButton("Horizontal"))
+            isAttackPressed = true;
+        }
+        
+        if (Input.GetButton("Horizontal") && !(isAttacking && isGrounded)){ 
             Run();
-
-        if (Input.GetButtonDown("Jump")) {
+        }
+        
+        if (Input.GetButtonDown("Jump") && !isAttacking) {
             Jump();
         }
 
+        // Animations
+     
+        checkGround();   
+
+        if (isGrounded && !isAttacking)
+        {
+            if (Input.GetButton("Horizontal"))
+                playAnimation(PLAYER_RUN);
+            else 
+                playAnimation(PLAYER_IDLE);
+        } 
+        else if (!isAttacking)
+            playAnimation(PLAYER_JUMP);
+        
+
+        if (isAttackPressed && !isAttacking){
+            isAttackPressed = false;
+            isAttacking = true;
+
+            playAnimation(PLAYER_ATTACK);
+            Invoke("AttackFinished", 0.34F / 1.5F);
+        }
+    }
+
+    private void AttackFinished(){
+        isAttacking = false;
     }
 
     private void Run() 
     {
         Vector3 direction = transform.right * Input.GetAxis("Horizontal");
+    
         transform.position = Vector3.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);    
 
         sprite.flipX = direction.x < 0.0F;
 
-        if (isGrounded) 
-            state = CharState.Run;
+        // if (isGrounded) 
+        //     state = CharState.Run;
     }
     private void Jump()
     {
@@ -87,18 +132,9 @@ public class Character : Unit
         }
         Debug.Log(Health);
     }
-
-    private void checkGround()
-    {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.3F);
-        isGrounded = colliders.Length > 1;
-        if (!isGrounded)
-            state = CharState.Jump;
-    }
-
     private void Attack()
     {
-        state = CharState.Attack;
+        // state = CharState.Attack;
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackpoint.position, attackRange);
 
@@ -110,7 +146,6 @@ public class Character : Unit
             }
         }
     }
-
     private void shoot(){
         Vector3 position = transform.position;
         position.y += 1.0F;
@@ -123,6 +158,33 @@ public class Character : Unit
         NewProj.Damage = _fireballDamage;
     }
 
+    public override void recieveDamage(int damage){
+            Health -= damage;
+            if (Health <= 0)
+                Die();
+            Debug.Log($"{Name} recieved {damage} damege. Health: {Health}");
+            animator.SetTrigger("hurt");
+            rigidbody.velocity = Vector3.zero;
+            Vector2 vector = Vector2.one;
+            vector.x *= 8.0F;
+            vector.y *=  (sprite.flipX ? -1.0F : 1.0F ) * 16.0F;
+            rigidbody.AddForce(vector, ForceMode2D.Impulse);
+            
 
+        }
+
+    private void playAnimation(string animation)
+    {
+        if (animation != currentAnimation)
+        {
+            currentAnimation = animation;
+            animator.Play(animation);
+        }    
+    }
+    private void checkGround()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.3F);
+        isGrounded = colliders.Length > 1;
+    }
 
 }

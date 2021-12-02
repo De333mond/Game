@@ -8597,6 +8597,14 @@ PrefabInstance:
       propertyPath: _health
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 2993903187774302369, guid: fe9ba096afeac2149b6b9209aee68ed7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2993903187774302369, guid: fe9ba096afeac2149b6b9209aee68ed7, type: 3}
+      propertyPath: isMoveable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2993903187774302380, guid: fe9ba096afeac2149b6b9209aee68ed7, type: 3}
       propertyPath: m_Name
       value: Monster
@@ -8669,6 +8677,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 2993903188552110943, guid: fe9ba096afeac2149b6b9209aee68ed7, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2993903188552110943, guid: fe9ba096afeac2149b6b9209aee68ed7, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2993903188552110943, guid: fe9ba096afeac2149b6b9209aee68ed7, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe9ba096afeac2149b6b9209aee68ed7, type: 3}
 --- !u!1 &1476379290 stripped
@@ -8697,6 +8717,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1476379295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476379290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 444bf19858e1d8b469a81ff26d15871f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Player: {fileID: 1987720844}
+  enemySpeed: 2
+  dangerDist: 15
 --- !u!1 &1769487129
 GameObject:
   m_ObjectHideFlags: 0
